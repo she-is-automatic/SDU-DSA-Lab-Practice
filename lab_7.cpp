@@ -11,11 +11,14 @@ template<class T>
 class arrayQueue {
 public:
     explicit arrayQueue(int initialCapacity = 10);
+
     ~arrayQueue() { delete[] queue; }
 
     // ADT
     bool empty() const { return theFront == theBack; }
+
     int size() const { return (theBack - theFront + arrayLength) % arrayLength; }
+
     T &front(); // 队列头
     T &back();  // 队列尾
     void pop(); // 队列首元素出队列
@@ -86,11 +89,29 @@ void arrayQueue<T>::pop() {
     queue[theFront].~T();   // 队列首元素析构
 }
 
+//int play(int n) {
+//    arrayQueue<int> cards;
+//    for (int i = 0; i < n; ++i) // 将n张牌入队列
+//        cards.push(i + 1);
+//
+//    while (cards.size() >= 2) {
+//        cards.pop();    //扔掉第一张牌
+//        cards.push(cards.front());  //第一张牌放到最后
+//        cards.pop();    //扔掉第一张牌
+//    }
+//    return cards.front();
+//}
+
 int play(int n) {
     arrayQueue<int> cards;
-    for (int i = 0; i < n; ++i) // 将n张牌入队列
-        cards.push(i + 1);
-
+    for (int i = 1; i <= n; ++i) {
+        if (i % 2 == 0)     //第一轮扔牌后，所有奇数都被丢掉，故直接不push入数组，节省空间
+            cards.push(i);
+    }
+    if (n % 2 == 1) {
+        cards.push(cards.front());
+        cards.pop();
+    }
     while (cards.size() >= 2) {
         cards.pop();    //扔掉第一张牌
         cards.push(cards.front());  //第一张牌放到最后
@@ -99,7 +120,7 @@ int play(int n) {
     return cards.front();
 }
 
-int main(){
+int main() {
     int n;
     cin >> n;
     cout << play(n) << endl;
